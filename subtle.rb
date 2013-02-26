@@ -12,10 +12,10 @@ begin
   require "#{ENV["HOME"]}/bin/launcher/launcher.rb"
   require "#{ENV["HOME"]}/selector.rb"
 
-  Subtle::Contrib::Selector.font  = "xft:Days-9:antialias=true:hinting=true:hintstyle=medium"
+  Subtle::Contrib::Selector.font  = "xft:Dejavu Sans Mono-9:antialias=true:hinting=true:hintstyle=medium"
   Subtle::Contrib::Launcher.fonts = [
-    "xft:Arial:bold:pixelsize=40",
-    "xft:Arial:bold:pixelsize=10"
+    "xft:Dejavu Sans Mono:bold:pixelsize=40",
+    "xft:Dejavu Sans Mono:bold:pixelsize=10"
   ]
 
   Subtle::Contrib::Launcher.browser_screen_num = 0
@@ -34,8 +34,8 @@ set :tiling,    false
 # Screens {{{
 screen 1 do
 arch = Subtlext::Icon.new("/home/paul/.icons/subtle/subtle1.xbm")
-  top     [ :spacer, :mpd, :weather_mod, :spacer, arch ]
-  bottom [ :views, :title, :spacer, :textfile, :spacer, :cpu, :separator, :battery, :separator, :nettraffic, :separator, :clock, :separator, :notify, :tray ]
+top     [ :spacer, :mpd, :spacer ]
+  bottom [ :views, :title, :spacer, :cpu, :separator, :battery, :separator, :nettraffic, :separator, :clock2, :separator, :tray, :separator, arch ]
 end
 
 # }}}
@@ -43,34 +43,35 @@ end
 # Styles {{{
 style :all do
   padding    1, 4, 1, 4
-  background "#EBEBEB"
-  font       "xft:Droid Sans-12:bold:antialias=true:hinting=true:hintstyle=medium"
+  background "#d3d8d0"
+  font       "xft:Dejavu Sans Mono-13:antialias=true:hinting=true:hintstyle=medium"
   #font       "-*-tamsyn-medium-r-normal-*-10-*-*-*-*-*-*-*"
 end
 
 style :title do
-  foreground "#000000"
+  foreground "#0e3df0"
 end
 
 style :views do
-  foreground "#b22020"
+  foreground "#d3d8d0"
   icon       "#c2c2c2"
 
   style :focus do
-    foreground    "#b22020"
-    icon          "#000000"
-    border_bottom "#000000", 2
+    foreground    "#1bf00e"
+    icon          "#1bf00e"
+    border_bottom "#1bf00e", 2
   end
 
   style :occupied do
-    icon          "#808080"
-    foreground    "#95b2cc"
-    border_bottom "#808080", 2
+    icon          "#0e3df0"
+    foreground    "#0e3df0"
+    border_bottom "#0e3df0", 2
   end
 
   style :urgent do
-    foreground "#ffffff"
-    icon       "#c0bd5c"
+    foreground "#d3d8d0"
+    icon       "#f02c0e"
+    border_bottom "#f02c0e", 2
   end
 
   style :visible do
@@ -80,33 +81,28 @@ style :views do
 end
 
 style :sublets do
-  style :clock do
-       foreground "#657b83" 
-       icon       "#657b83" 
+  style :clock2 do
+       foreground "#000000" 
+       icon       "#0e3df0" 
   end
   style :tasks do
-       foreground "#ff9800"
+       foreground "#d3d8d0"
   end
-  style :cpu do
-       foreground "#657b83"
+  style :battery do
+      background "#151515"
+  end    
+  style :nettraffic do
+       foreground "#f0400e"
   end     
-  style :weather_mod do
-       foreground "#657b83"
-       background "#ebebeb"
-  end  
-  style :betternotify do
-       foreground "#ff006a"
-       background "#ebebeb"
-  end        
-       foreground "#657b83"
-       background "#ebebeb"
-end
-
-style :separator do
-  foreground "#073642"
-  separator  " "
-end
-
+  style :cpu do
+       foreground "#0e3df0"
+  end
+       foreground "#808080"
+end        
+  style :separator do
+       foreground "#d3d8d0"
+       separator  " | "
+  end
 style :clients do
  # active   "#7c7c72", 2
   active "#657b83", 1
@@ -116,7 +112,7 @@ style :clients do
 end
 
 style :subtle do
-  panel      "#ebebeb"
+  panel      "#d3d8d0"
   padding    0, 0, 0, 0
   #background "#595959"
   stipple    "#595959"
@@ -161,9 +157,9 @@ gravity :bottom_left66,  [   0,  50,  50,  66 ]
 gravity :bottom_left33,  [   0,  50,  50,  34 ]
 
   # Bottom
-gravity :bottom,         [  50,   0, 100, 100 ]
-gravity :bottom66,       [  50,   0, 100,  66 ]
-gravity :bottom33,       [  50,   0, 100,  34 ]
+gravity :bottom,         [   0,  50, 100,  50 ]
+gravity :bottom66,       [   0,  34, 100,  66 ] 
+gravity :bottom33,       [   0,  67, 100,  33 ]
 
   # Bottom right
 gravity :bottom_right,   [   0,  50,  50,  50 ]
@@ -201,8 +197,8 @@ grab modkey + "-e", [ :top_right,    :top_right66,    :top_right33    ]
 grab modkey + "-a", [ :left,         :left66,         :left33         ]
 grab modkey + "-s", [ :center,       :center66,       :center33       ]
 grab modkey + "-d", [ :right,        :right66,        :right33        ]
-grab modkey + "-y", [ :bottom_left,  :bottom_left66,  :bottom_left33  ]
-#grab modkey + "-x", [ :bottom,       :bottom66,       :bottom33       ]
+grab modkey + "-z", [ :bottom_left,  :bottom_left66,  :bottom_left33  ]
+grab modkey + "-x", [ :bottom,       :bottom66,       :bottom33       ]
 grab modkey + "-B1",      :WindowMove
 grab modkey + "-B3",      :WindowResize
 grab modkey + "-S-f",     :WindowFloat
@@ -254,29 +250,30 @@ grab "XF86AudioPrev",        :MpdPrevious
 grab modkey + "-Return", "urxvt"
 grab modkey + "-c", "chromium"
 grab modkey + "-f", "firefox"
-grab modkey + "-t", "thunar"
-grab modkey + "-p", "/home/paul/scripts/launcher"
+#grab modkey + "-t", "thunar"
+grab modkey + "-p", "/home/paul/scripts/launcherx"
 grab modkey + "-C-d", "/home/paul/scripts/todo1"
-grab modkey + "-C-t", "urxvt -name ranger -e ranger"
-grab modkey + "-C-m", "urxvt -name mutt -e mutt"
-grab modkey + "-C-n", "urxvt -name ncmpcpp -e ncmpcpp"
+grab modkey + "-t", "urxvt -name ranger -e ranger"
+grab modkey + "-m", "urxvt -name mutt -e mutt"
+grab modkey + "-n", "urxvt -name ncmpcpp -e ncmpcpp"
 grab modkey + "-Escape", "/home/paul/scripts/shutdown-menu.sh"
-grab modkey + "-C-f", "urxvt -name finch -e finch"
+grab modkey + "C-f", "/home/paul/scripts/dmenu-finder.sh"
+grab modkey + "C-t", "/home/paul/bin/dmenfm"
 # Contrib
-grab "W-x" do
+grab "W-y" do
   Subtle::Contrib::Launcher.run
 end
 
-grab "W-z" do
-  Subtle::Contrib::Selector.run
-end
+#grab "W-z" do
+#  Subtle::Contrib::Selector.run
+#end
 
 # Scratchpad
 grab "W-S-s" do
   if (c = Subtlext::Client.first("scratchpad"))
     c.toggle_stick
     c.focus
-  elsif (c = Subtlext::Subtle.spawn("urxvt -name scratchpad"))
+  elsif (c = Subtlext::Client.spawn("urxvt -name scratchpad"))
     c.tags  = []
     c.flags = [ :stick ]
   end
@@ -284,7 +281,7 @@ end
 
 # Tags {{{
 tag "terms" do
-  match    instance: "xterm|urxvtc|urxvt|terminali|mutt"
+  match    instance: "xterm|urxvtc|urxvt|terminal|mutt"
  # exclude  instance: "scratchpad"
   gravity  :center
   resize   true
@@ -296,18 +293,18 @@ tag "net" do
 end
 
 tag "edit" do
-  match  "[g]?vim|gedit"
+  match  "[g]?vim|gedit|pluma"
   resize true
 end
 
 tag "file" do
-  match    "thunar|ranger"
+  match    "nautilus|thunar|ranger|spacefm"
 end
 
-tag "im" do
-  match    "pidgin|finch"
-  gravity :pidgin
-end
+#tag "im" do
+#  match    "pidgin|finch"
+#  gravity :pidgin
+#end
 
 tag "media" do
   match   "mplayer|ncmpcpp|vlc"
@@ -383,7 +380,7 @@ end
 net       = "net"
 terms     = "term"
 file      = "file"
-im        = "im"
+#im        = "im"
 media     = "media"
 edit      = "edit"
 stuff     = "stuff"
@@ -397,7 +394,7 @@ space = {
   :net     => Subtlext::Icon.new("#{iconpath}/invader1.xbm"),
   :terms   => Subtlext::Icon.new("#{iconpath}/invader2.xbm"),
   :file    => Subtlext::Icon.new("#{iconpath}/invader3.xbm"),
-  :im      => Subtlext::Icon.new("#{iconpath}/balloon.xbm"),
+#  :im      => Subtlext::Icon.new("#{iconpath}/balloon.xbm"),
   :media   => Subtlext::Icon.new("#{iconpath}/movie.xbm"),
   :edit    => Subtlext::Icon.new("#{iconpath}/binder.xbm"),
   :stuff   => Subtlext::Icon.new("#{iconpath}/ghost.xbm"),
@@ -426,11 +423,11 @@ view "file" do
   icon_only icons
 end
 
-view "im" do
-  match   im
-  icon     Subtlext::Icon.new("#{iconpath}/balloon.xbm")
-  icon_only icons
-end
+#view "im" do
+#  match   im
+#  icon     Subtlext::Icon.new("#{iconpath}/balloon.xbm")
+#  icon_only icons
+#end
 
 view "media" do
   match   media
@@ -465,32 +462,24 @@ view "libre" do
 end
 
 on :start do
-   Subtlext::Subtle.spawn "setxkbmap gb"
+   Subtlext::Client.spawn "setxkbmap gb"
 end
 
 on :start do
-   Subtlext::Subtle.spawn "/home/paul/bin/dunst -t 3"
-end
-
-#on :start do
-#   Subtlext::Subtle.spawn "nm-applet"
-#end
-
-on :start do
-   Subtlext::Subtle.spawn "setxkbmap -option terminate:ctrl_alt_bksp"
+   Subtlext::Client.spawn "/home/paul/bin/dunst -t 3"
 end
 
 on :start do
-   Subtlext::Subtle.spawn "gnome-sound-applet"
+   Subtlext::Client.spawn "weatherboy -l 27883480 -u c -d 120 -a"
 end
 
-#on :start do
-#   Subtlext::Subtle.spawn "/home/paul/bin/conky -c ~/.conkyrc1 | /home/paul/bin/dzen2 -x '0' -y '0' -w '1366' -h '18' -bg '#073642' -fn 'droid sans:bold:size=8'"
-#end
+on :start do
+   Subtlext::Client.spawn "setxkbmap -option terminate:ctrl_alt_bksp"
+end
 
-#on :start do
-#   Subtlext::Subtle.spawn "pidgin"
-#end
+on :start do 
+   Subtlext::Client.spawn "parcellite"
+end
 
 # Sublets {{{
 #Sublet Colours
@@ -504,32 +493,21 @@ end
 #col6 = Subtlext::Color.new("#505050")      
 #col7 = Subtlext::Color.new("#3bb9ff")  
 
-sublet :clock do
-  format_string "%a %b %d, %X"
-end
-
-sublet :weather_mod do
-  interval 7200
-  locale "en"
-  units "c"
-  location "Swansea"
-  day_color "#657b83"
-  temp_color "#586e75"
-  sep "-"
-  temp_suffix 'c'
+sublet :clock2 do
+  time_format "%H:%M"
+  date_format "%d/%m/%y"
+  time_color "#9d0ef0"
+  date_color "#9d0ef0"
 end  
 
-sublet :notify do
-  interval 30                         
-  foreground "#808080"
-  background "#ebebeb"
-  highlight "#FF0000"
-end
-  
+sublet :volume do
+  foreground "#586e75"
+end  
+    
 sublet :mpd do
   interval 30
   show_colors true
-  foreground "#586e75"
+  foreground "#808080"
   background "#ebebeb"
   show_icons false
   show_pause true
@@ -540,19 +518,12 @@ sublet :mpd do
   title_color "#586e75"
   not_running_text "mpd stopped :("
   album_color "#586e75"
-  stop_color "#586e75"
+  stop_color "#808080"
   pause_color "#586e75"
 end
 
-sublet :textfile do
-  file "/home/paul/downloads/NOTES"
-end
-  
-sublet :temp do
-  show_name false
-end    
-  
 sublet :battery do
+  color_text true
   colors 10 => "#FF0000", 20 => "#399bff", 100 => "#33cc00"
   path "/sys/class/power_supply/BAT0"
 end 
